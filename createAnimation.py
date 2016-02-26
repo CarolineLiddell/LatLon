@@ -17,13 +17,15 @@ metadata = dict(title='animation of movement')
 writer = FFMpegWriter(fps=10, metadata=metadata)
 
 
-posfilename = 'path/to/csv/file.csv'
+posfilename =HD +  '/Dropbox/Sheep_Files_1/PyHM_Kate.csv'
 posDF = pd.read_csv(posfilename) 
+posDF['x'] = posDF['calc_distance'].values*np.cos(posDF['calc_heading'])
+posDF['y'] = posDF['calc_distance'].values*np.sin(posDF['calc_heading'])
         
 fig = plt.figure(figsize=(10, 10), dpi=100)
 
 l, = plt.plot([], [], 'ro')
-plt.axis([0,4000, 2000,-2000])
+plt.axis([-0.5,0.5,-0.5,0.5])
 
 
 
@@ -33,7 +35,8 @@ fc = 0
 with writer.saving(fig, "move.mp4", totalFrames):# len(posDF.groupby('frame'))):
 
 
-    for fnum, frame in posDF.groupby('frame'):
+    for fnum, frame in posDF.groupby(['Hours','Minutes']):
+        #break
         fc = fc + 1
         if fc>totalFrames:
             break
