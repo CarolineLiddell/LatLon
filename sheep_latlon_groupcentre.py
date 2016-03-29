@@ -9,11 +9,24 @@ import numpy as np
 import pandas as pd
 import haversine
 import matplotlib.pyplot as plt
+import csv
 
 # import data
-data = pd.read_csv("C:/Phd/Alice/PyHM_Bainbridge1.csv", skipinitialspace=True)
-sheep_summary = pd.read_csv("C:/Phd/Alice/Summary_Bainbridge.csv", delimiter = ',')
+#data = pd.read_csv("C:/Phd/Alice/PyHM_Bainbridge1.csv", skipinitialspace=True)
+#sheep_summary = pd.read_csv("C:/Phd/Alice/Summary_Bainbridge.csv", delimiter = ',')
+
+data = pd.read_csv("C:/Phd/Alice/PyHM_Kate1.csv", skipinitialspace=True)
+sheep_summary = pd.read_csv("C:/Phd/Alice/Summary_Kate.csv", delimiter = ',')
+
+#data = pd.read_csv("C:/Phd/Alice/PyHM_Amos1.csv", skipinitialspace=True)
+#sheep_summary = pd.read_csv("C:/Phd/Alice/Summary_Amos.csv", delimiter = ',')
+
+#data = pd.read_csv("C:/Phd/Alice/PyHM_Redlands1.csv", skipinitialspace=True)
+#sheep_summary = pd.read_csv("C:/Phd/Alice/Summary_Redlands.csv", delimiter = ',')
+
+
 sheep_summary['Sheep_ID'] = sheep_summary['Sheep_ID '] # remove spacing
+
 
 # convert hours and minutes to strings (length = 2 characters)
 # need to be strings to create timestamp
@@ -27,7 +40,6 @@ data['timestamp'] = pd.to_datetime(data['Date'] + ' ' + data['Hours'] + ':' + da
 # create empty lists to collect first and last GPS collar recordings of each sheep
 start_last = []
 end_first = []
-
 
 # loop through all the sheep finding the maximum and minumum time stamp, add these to the lists
 for sheepName in np.unique(data['Sheep_ID']):    
@@ -76,7 +88,18 @@ for sheep in sheeps:
     FEC[sheep] = sheep_summary.loc[sheep_summary['Sheep_ID']==sheep].FEC.values[0]
 
 
+
+# save dictionary as CSV file
+with open('C:/Phd/Alice/Distance_Centre_Kate1.csv','wb') as f:
+    w = csv.writer(f)
+    w.writerow(distance_centre.keys())
+    w.writerow(distance_centre.values())
+
+
 # plot mean distance from centre of group again faecal egg count
+plt.scatter(distance_centre.values(), FEC.values())
+#plt.title("Redlands")
 plt.xlabel("average distance from centre")
 plt.ylabel("FEC") 
-plt.scatter(distance_centre.values(), FEC.values())
+
+
